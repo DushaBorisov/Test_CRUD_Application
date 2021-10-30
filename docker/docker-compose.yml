@@ -1,0 +1,21 @@
+version: '3.9'
+
+services:
+
+  postgres:
+    image: postgres:13.3
+    container_name: crud-test-postgres
+    hostname: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_DB=crud_application_tests_db
+    ports:
+      - '5055:5432'
+    volumes:
+      - ./db/database_init.sql:/docker-entrypoint-initdb.d/database_init.sql
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d crud_application_tests_db" ]
+      timeout: 10s
+      retries: 20
