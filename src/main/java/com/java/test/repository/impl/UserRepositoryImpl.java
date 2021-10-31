@@ -16,11 +16,11 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserRepositoryImpl implements UserRepository {
 
-    private static final String SQL_QUERY_SELECT_USER_BY_ID = "SELECT * FROM public.users WHERE id = :id";
-    private static final String SQL_QUERY_INSERT_NEW_USER = "INSERT INTO public.users(name, surname, age, login, password) VALUES( :name, :surname, :age, :login, :password)";
-    private static final String SQL_QUERY_DELETE_USER_BY_ID = "DELETE FROM public.users WHERE id = :id";
-    private static final String SQL_QUERY_SELECT_ALL_USERS = "SELECT * FROM public.users";
-    private static final String SQL_QUERY_UPDATE_USER = "UPDATE public.users SET name = :name, surname = :surname, age = :age, login = :login, password = :password WHERE login = :login AND password = :password";
+    private static final String SQL_QUERY_SELECT_USER_BY_ID = "SELECT * FROM users WHERE id = :id";
+    private static final String SQL_QUERY_INSERT_NEW_USER = "INSERT INTO users(name, surname, age, login, password) VALUES( :name, :surname, :age, :login, :password)";
+    private static final String SQL_QUERY_DELETE_USER_BY_ID = "DELETE FROM users WHERE id = :id";
+    private static final String SQL_QUERY_SELECT_ALL_USERS = "SELECT * FROM users";
+    private static final String SQL_QUERY_UPDATE_USER = "UPDATE users SET name = :name, surname = :surname, age = :age, login = :login, password = :password WHERE login = :login AND password = :password";
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -34,7 +34,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public List<User> getAllUsers() {
-        return namedParameterJdbcTemplate.queryForList(SQL_QUERY_SELECT_ALL_USERS, new HashMap<>(), User.class);
+        return namedParameterJdbcTemplate.query(SQL_QUERY_SELECT_ALL_USERS, new HashMap<>(), new UserRowMapper());
     }
 
     @Override
