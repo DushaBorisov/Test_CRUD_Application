@@ -2,6 +2,8 @@ package com.java.test.repository.impl;
 
 import com.java.test.entity.User;
 import com.java.test.repository.UserRepository;
+import com.java.test.repository.entity.NewUserId;
+import com.java.test.repository.mappers.NewUserIdRowMapper;
 import com.java.test.repository.mappers.UserRowMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -17,7 +19,7 @@ import java.util.Optional;
 public class UserRepositoryImpl implements UserRepository {
 
     private static final String SQL_QUERY_SELECT_USER_BY_ID = "SELECT * FROM users WHERE id = :id";
-    private static final String SQL_QUERY_INSERT_NEW_USER = "INSERT INTO users(name, surname, age, login, password) VALUES( :name, :surname, :age, :login, :password)";
+    private static final String SQL_QUERY_INSERT_NEW_USER = "INSERT INTO users(name, surname, age, login, password) VALUES( :name, :surname, :age, :login, :password) RETURNING id";
     private static final String SQL_QUERY_DELETE_USER_BY_ID = "DELETE FROM users WHERE id = :id";
     private static final String SQL_QUERY_SELECT_ALL_USERS = "SELECT * FROM users";
     private static final String SQL_QUERY_UPDATE_USER = "UPDATE users SET name = :name, surname = :surname, age = :age, login = :login, password = :password WHERE login = :login AND password = :password";
@@ -53,8 +55,7 @@ public class UserRepositoryImpl implements UserRepository {
         params.put("age", user.getAge());
         params.put("login", user.getLogin());
         params.put("password", user.getPassword());
-
-        return namedParameterJdbcTemplate.update(SQL_QUERY_INSERT_NEW_USER, params);
+        return namedParameterJdbcTemplate.queryForObject(SQL_QUERY_INSERT_NEW_USER, params, new NewUserIdRowMapper()).getId();
     }
 
     @Override
